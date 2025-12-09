@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Review Sentiment Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 12px;
+            padding: 10px 18px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            background-color: #0078d4;
+            color: white;
+        }
+
+        .result {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #e9f5ff;
+            border: 1px solid #b3daff;
+        }
+
+        .error {
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #ffe9e9;
+            border: 1px solid #ffb3b3;
+            color: #b00000;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .positive {
+            background-color: #28a745;
+        }
+
+        .negative {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>Review Sentiment Demo</h1>
+    <div class="card">
+        <label><strong>Enter a product review:</strong></label>
+        <textarea id="reviewText" placeholder="Example: This product is amazing, I love it!"></textarea>
+        <button id="predictBtn">Predict Sentiment</button>
+
+        <div id="result" style="display:none;" class="result"></div>
+        <div id="error" style="display:none;" class="error"></div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('predictBtn');
+        const txt = document.getElementById('reviewText');
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('error');
+
+        btn.addEventListener('click', async () => {
+            const text = txt.value.trim();
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            if (!text) {
+                errorDiv.textContent = 'Please type a review first.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Predicting...';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                });
+
+                if (!response.ok) {
+                    const err = await response.text();
+                    throw new Error(err || 'Request failed');
+                }
+
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <div>
+                        <span class="badge ${data.isPositive ? 'positive' : 'negative'}">
+                            ${data.isPositive ? 'Positive' : 'Negative'}
+                        </span>
+                        &nbsp;(${(data.probability * 100).toFixed(2)}% confidence)
+                        <div style="margin-top:8px;"><strong>Review:</strong> ${data.text}</div>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+
+            } catch (e) {
+                errorDiv.textContent = 'Error: ' + e.message;
+                errorDiv.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Predict Sentiment';
+            }
+        });
+    </script>
+</body>
+</html>
