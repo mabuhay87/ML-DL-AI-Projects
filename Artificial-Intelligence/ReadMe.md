@@ -1,13 +1,13 @@
-# 🧠 AI Projects
+# AI Projects
 
-> 🚀 **Training in Progress**  
+> **Training in Progress**  
 > A growing collection of my hands-on projects in **Artificial Intelligence**.
 
 ---
 
-## 📘 About
+## About
 This repository documents my continuous learning and practical development journey as I train in:
-- 🧠 Artificial Intelligence (NLP, Reinforcement Learning, and Intelligent Systems)
+- Artificial Intelligence (NLP, Reinforcement Learning, and Intelligent Systems)
 
 Each project includes:
 - Jupyter Notebooks (`.ipynb`)
@@ -17,14 +17,14 @@ Each project includes:
 
 ---
 
-## 🧭 Project Categories
+## Project Categories
 | Category | Description | Folder Link |
 |-----------|--------------|--------------|
-| 🤖 Artificial Intelligence | Intelligent agents, NLP, and automation | [Artificial-Intelligence](Artificial-Intelligence/) |
+| Artificial Intelligence | Intelligent agents, NLP, and automation | [Artificial-Intelligence](Artificial-Intelligence/) |
 
 ---
 
-## ⚙️ Tools & Technologies
+## Tools & Technologies
 | Category | Tools |
 |-----------|--------|
 | Language | Python 3 |
@@ -36,7 +36,7 @@ Each project includes:
 
 ---
 
-# 🤖 Artificial Intelligence Projects
+# Artificial Intelligence Projects
 
 AI-focused projects exploring NLP, chatbots, reinforcement learning, and intelligent systems.
 *Coming Soon*
@@ -50,8 +50,8 @@ AI-focused projects exploring NLP, chatbots, reinforcement learning, and intelli
 ---
 > _Diving into intelligent systems that learn and adapt._
 
-## 🌱 Current Status
-💡 *Machine Learning, Deep Learning, and AI training in progress.*  
+## Current Status
+*Machine Learning, Deep Learning, and AI training in progress.*  
 New projects will be added as I complete each stage of my learning roadmap.
 
 ---
@@ -61,4 +61,5 @@ New projects will be added as I complete each stage of my learning roadmap.
 ---
 
 > _"Learning AI is a journey every project is a step toward mastery."_  
+
 > *Cristina L. F*
