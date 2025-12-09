@@ -47,7 +47,7 @@ Projects focused on classical Machine Learning techniques such as classification
 
 
 
-| 1 | Customer Churn Prediction - A machine learning model that predicts which customers are likely to leave a subscription service using behavioral, 
+| 1 | Customer Churn Prediction = A machine learning model that predicts which customers are likely to leave a subscription service using behavioral, 
       demographic, and usage data. The project includes data  preprocessing, XGBoost modeling, SHAP explainability, and a Power BI dashboard that highlights churn risk segments and key drivers of customer 
       attrition.
 
@@ -56,7 +56,7 @@ Projects focused on classical Machine Learning techniques such as classification
       includes an XGBoost prediction model, SHAP-based explainability, and an interactive Power BI dashboard that visualizes fraud probability, high-risk patterns, and 
       key indicators for faster investigation.
 
-| 3 | 
+| 3 | Review Sentiment Solution = is an end-to-end ML.NET, ASP.NET Core, and React application that predicts whether a product review is positive or negative through an interactive web interface.
 
 ---
 > _Part of my AI learning series focusing on data preprocessing, model training, and evaluation._
@@ -76,6 +76,7 @@ New projects will be added as I complete each stage of my learning roadmap.
 > _"Learning AI is a journey every project is a step toward mastery."_  
 
 > *Cristina L. F*
+
 
 
 
