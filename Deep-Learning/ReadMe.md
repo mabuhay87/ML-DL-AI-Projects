@@ -1,13 +1,13 @@
-# 🧠 AI Projects
+# AI Projects
 
-> 🚀 **Training in Progress**  
+> **Training in Progress**  
 > A growing collection of my hands-on projects in **Deep Learning**.
 
 ---
 
-## 📘 About
+## About
 This repository documents my continuous learning and practical development journey as I train in:
-- 🧩 Deep Learning (Neural Networks, CNNs, LSTMs)
+- Deep Learning (Neural Networks, CNNs, LSTMs)
 
 
 Each project includes:
@@ -18,14 +18,14 @@ Each project includes:
 
 ---
 
-## 🧭 Project Categories
+## Project Categories
 | Category | Description | Folder Link |
 |-----------|--------------|--------------|
 | 🧬 Deep Learning | Neural networks and advanced AI models | [Deep-Learning](Deep-Learning/) |
 
 ---
 
-## ⚙️ Tools & Technologies
+## Tools & Technologies
 | Category | Tools |
 |-----------|--------|
 | Language | Python 3 |
@@ -37,13 +37,13 @@ Each project includes:
 
 ---
 
-## 🌱 Current Status
-💡 *Machine Learning, Deep Learning, and AI training in progress.*  
+## Current Status
+*Machine Learning, Deep Learning, and AI training in progress.*  
 New projects will be added as I complete each stage of my learning roadmap.
 
 ---
 
-# 🧬 Deep Learning Projects
+# Deep Learning Projects
 
 Projects involving neural networks and advanced architectures in TensorFlow, Keras, and PyTorch.
 *Coming Soon* 
@@ -59,4 +59,5 @@ Projects involving neural networks and advanced architectures in TensorFlow, Ker
 ---
 
 > _"Learning AI is a journey every project is a step toward mastery."_  
+
 > *Cristina L. F*
