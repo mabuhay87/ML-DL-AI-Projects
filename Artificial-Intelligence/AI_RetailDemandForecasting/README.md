@@ -1,6 +1,6 @@
 # Retail Demand Forecasting (Time Series AI) - Batch Mode + Searchable Dropdowns
 
-## Added in this zip
+## Added in this:
 - Store and Item dropdowns are **searchable** (type-to-filter) using Tom Select (Bootstrap 5 theme).
 - Item list still auto-filters by Store, and the searchable list refreshes when Store changes.
 
