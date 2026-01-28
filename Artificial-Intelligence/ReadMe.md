@@ -43,7 +43,7 @@ AI-focused projects exploring NLP, chatbots, reinforcement learning, and intelli
 
 | # | Project | Description | Tools |
 |---|----------|--------------|--------|
-| 1 | RetailDemandForecasting
+| 1 | RetailDemandForecasting | Retail Demand Forecasting (Time Series AI) - Batch Mode + Searchable Dropdowns
 | 2 | 
 | 3 |  
 
@@ -63,4 +63,5 @@ New projects will be added as I complete each stage of my learning roadmap.
 > _"Learning AI is a journey every project is a step toward mastery."_  
 
 > *Cristina L. F*
+
 
