@@ -1,0 +1,19 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+<div class="p-4 bg-light rounded-3 border">
+    <h1 class="h3">Retail Demand Forecasting (Time Series AI)</h1>
+    <p class="mb-2">
+        Forecast retail demand per Store + Item using ML.NET SSA time series.
+    </p>
+    <ul class="mb-0">
+        <li>Single mode: choose a Store + Item and see history vs forecast chart</li>
+        <li><strong>Batch mode</strong>: run all Store/Item combinations and export results to CSV</li>
+        <li><strong>Searchable dropdowns</strong>: type to filter Store/Item lists</li>
+    </ul>
+    <div class="mt-3">
+        Go to <a asp-page="/Forecast">Forecast</a>.
+    </div>
+</div>

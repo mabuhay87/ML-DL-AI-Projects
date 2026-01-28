@@ -1,0 +1,226 @@
+@page
+@model RetailDemandForecasting.Pages.ForecastModel
+@{
+    ViewData["Title"] = "Forecast";
+}
+
+<h2 class="h4 mb-3">Forecast</h2>
+
+@if (!string.IsNullOrWhiteSpace(Model.DataWarning))
+{
+    <div class="alert alert-warning">@Model.DataWarning</div>
+}
+
+<form method="post" class="row g-3 align-items-end">
+    <div class="col-12">
+        <div class="form-check">
+            <input asp-for="BatchMode" class="form-check-input" type="checkbox" id="batchModeCheck">
+            <label class="form-check-label" for="batchModeCheck">
+                Batch mode (All Stores / All Items) — generate CSV export
+            </label>
+        </div>
+        <div class="form-text">
+            In batch mode, dropdowns are ignored and the app forecasts every Store+Item with enough history.
+        </div>
+    </div>
+
+    <div class="col-12 col-md-3">
+        <label class="form-label">Store</label>
+        <select asp-for="Store" asp-items="Model.StoreOptions" class="form-select" id="storeSelect"></select>
+        <div class="form-text">Type to search stores.</div>
+    </div>
+    <div class="col-12 col-md-3">
+        <label class="form-label">Item</label>
+        <select asp-for="Item" class="form-select" id="itemSelect"></select>
+        <div class="form-text">Type to search items (filtered by store).</div>
+    </div>
+
+    <div class="col-12 col-md-3">
+        <label class="form-label">Forecast Horizon (days)</label>
+        <input asp-for="HorizonDays" class="form-control" />
+    </div>
+    <div class="col-12 col-md-3">
+        <label class="form-label">History to Plot (days)</label>
+        <input asp-for="HistoryPlotDays" class="form-control" />
+    </div>
+
+    <div class="col-12 col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Run</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrWhiteSpace(Model.Error))
+{
+    <div class="alert alert-danger mt-3">@Model.Error</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.BatchExportUrl))
+{
+    <div class="alert alert-success mt-3">
+        Batch forecast complete. Export ready:
+        <a href="@Model.BatchExportUrl" target="_blank">Download CSV</a>
+    </div>
+}
+
+@if (Model.BatchResults?.Count > 0)
+{
+    <div class="mt-4">
+        <h3 class="h5">Batch Summary (Top 50 by Avg Forecast)</h3>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Store</th>
+                        <th>Item</th>
+                        <th class="text-end">History</th>
+                        <th class="text-end">Next Day</th>
+                        <th class="text-end">Avg (Horizon)</th>
+                        <th class="text-end">Min</th>
+                        <th class="text-end">Max</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var r in Model.BatchResults.Take(50))
+                {
+                    <tr>
+                        <td>@r.Store</td>
+                        <td>@r.Item</td>
+                        <td class="text-end">@r.HistoryCount</td>
+                        <td class="text-end">@r.NextDayForecast.ToString("0.00")</td>
+                        <td class="text-end">@r.AvgForecast.ToString("0.00")</td>
+                        <td class="text-end">@r.MinForecast.ToString("0.00")</td>
+                        <td class="text-end">@r.MaxForecast.ToString("0.00")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.Result != null)
+{
+    <div class="mt-4">
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+            <div class="badge bg-secondary">Store @Model.Result.Store</div>
+            <div class="badge bg-secondary">Item @Model.Result.Item</div>
+            <div class="badge bg-secondary">History points: @Model.Result.HistoryCount</div>
+            <div class="badge bg-secondary">Horizon: @Model.Result.HorizonDays days</div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <canvas id="forecastChart" height="110"></canvas>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+<script>
+    // Store -> items mapping injected from server
+    const storeItems = @Html.Raw(Model.StoreItemMapJson ?? "{}");
+    const selectedStore = @Model.Store;
+    const selectedItem = @Model.Item;
+
+    const storeSelectEl = document.getElementById("storeSelect");
+    const itemSelectEl = document.getElementById("itemSelect");
+
+    function fillItems(storeId, keepItemId) {
+        const items = storeItems[storeId] || [];
+        itemSelectEl.innerHTML = "";
+
+        for (const id of items) {
+            const opt = document.createElement("option");
+            opt.value = id;
+            opt.textContent = id;
+            if (keepItemId && Number(keepItemId) === Number(id)) opt.selected = true;
+            itemSelectEl.appendChild(opt);
+        }
+
+        if (items.length > 0 && !itemSelectEl.value) {
+            itemSelectEl.value = items[0];
+        }
+    }
+
+    // Tom Select instances
+    let storeTS = null;
+    let itemTS = null;
+
+    function initTomSelects() {
+        if (storeTS) storeTS.destroy();
+        if (itemTS) itemTS.destroy();
+
+        storeTS = new TomSelect("#storeSelect", {
+            create: false,
+            allowEmptyOption: false,
+            placeholder: "Search store..."
+        });
+
+        itemTS = new TomSelect("#itemSelect", {
+            create: false,
+            allowEmptyOption: false,
+            placeholder: "Search item..."
+        });
+    }
+
+    // Initial population + init searchable dropdowns
+    if (storeSelectEl && itemSelectEl) {
+        fillItems(String(selectedStore), selectedItem);
+        initTomSelects();
+
+        // When store changes: rebuild item options AND re-init item TomSelect
+        storeSelectEl.addEventListener("change", () => {
+            const newStore = storeSelectEl.value;
+            fillItems(newStore, null);
+
+            if (itemTS) itemTS.destroy();
+            itemTS = new TomSelect("#itemSelect", {
+                create: false,
+                allowEmptyOption: false,
+                placeholder: "Search item..."
+            });
+        });
+    }
+
+    // Chart payload
+    const chartPayload = @Html.Raw(Model.ChartJson ?? "null");
+
+    if (chartPayload) {
+        const ctx = document.getElementById('forecastChart');
+
+        const labels = chartPayload.labels;
+        const history = chartPayload.history;
+        const forecast = chartPayload.forecast;
+        const lower = chartPayload.lower;
+        const upper = chartPayload.upper;
+
+        const historySeries = history.concat(Array(forecast.length).fill(null));
+        const forecastSeries = Array(history.length).fill(null).concat(forecast);
+        const lowerSeries = Array(history.length).fill(null).concat(lower);
+        const upperSeries = Array(history.length).fill(null).concat(upper);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'History (actual)', data: historySeries, pointRadius: 0, borderWidth: 2, tension: 0.15 },
+                    { label: 'Forecast', data: forecastSeries, pointRadius: 0, borderWidth: 2, tension: 0.15 },
+                    { label: 'Lower (95%)', data: lowerSeries, pointRadius: 0, borderWidth: 1, borderDash: [6,6], tension: 0.15 },
+                    { label: 'Upper (95%)', data: upperSeries, pointRadius: 0, borderWidth: 1, borderDash: [6,6], tension: 0.15 }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { display: true } },
+                scales: {
+                    x: { ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+</script>
+}
