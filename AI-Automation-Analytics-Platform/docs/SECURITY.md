@@ -142,8 +142,6 @@ Important: `appsettings.json` can be committed only when it contains safe defaul
 
 ## Screenshot Security Checklist
 
-Before uploading a screenshot to GitHub, verify that it does not expose:
-
 - API keys
 - client-secret values
 - passwords
@@ -156,13 +154,12 @@ Before uploading a screenshot to GitHub, verify that it does not expose:
 - personally identifiable information
 - confidential production data
 
-Crop or redact anything sensitive before publishing.
 
 ## Healthcare Data
 
 The Healthcare Claims Denial Intelligence report is a portfolio analytics project.
 
-Public portfolio screenshots should use synthetic, anonymized, or otherwise non-sensitive demonstration data. Real protected health information (PHI) should never be published to GitHub.
+No PHI is included in the project.
 
 ## Production Secret Management
 
@@ -193,8 +190,6 @@ Production applications should:
 - monitor repeated authentication failures
 
 ## Secret Rotation
-
-If a secret is accidentally committed to GitHub, simply deleting it from the latest file is not enough.
 
 The credential should be:
 
